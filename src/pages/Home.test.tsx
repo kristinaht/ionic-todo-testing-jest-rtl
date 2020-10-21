@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Home from './Home';
+import Home, { Todo } from './Home';
 
 test('page should have a title of Ionic React Todos', async () => {
   const { findByText } = render(<Home />);
@@ -13,4 +13,16 @@ test('page should have a title of Ionic React Todos', async () => {
 test('page should render no todos message when there are no todos', async () => {
   const { findByText } = render(<Home />);
   await findByText('No todos, add some!')
+});
+
+test('todos should be in the list when TodoList is loaded with todos', async () => {
+  const todos: Todo[] = [
+    { id: 1, text: 'review PR'},
+    { id: 2, text: 'update docs'},
+  ];
+
+  const { findByText } = render(<Home />);
+
+  await findByText(todos[0].text);
+  await findByText(todos[1].text);
 });
