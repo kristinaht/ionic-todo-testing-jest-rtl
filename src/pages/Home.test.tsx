@@ -2,6 +2,12 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import Home, { Todo } from './Home';
 
+function mockFetch(data: any) {
+  return jest.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify(data)));
+}
+
+beforeEach(() => mockFetch([]));
+
 test('page should have a title of Ionic React Todos', async () => {
   const { findByText } = render(<Home />);
   await findByText('Ionic React Todos');
@@ -20,6 +26,8 @@ test('todos should be in the list when TodoList is loaded with todos', async () 
     { id: 1, text: 'review PR'},
     { id: 2, text: 'update docs'},
   ];
+
+  mockFetch(todos);
 
   const { findByText } = render(<Home />);
 
