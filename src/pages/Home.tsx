@@ -1,5 +1,5 @@
-import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { trash, add } from 'ionicons/icons';
+import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { trash, add, text } from 'ionicons/icons';
 import React, { useState, useEffect } from 'react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
@@ -12,6 +12,7 @@ export interface Todo {
 const Home: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [ showModal, setShowModal ] = useState(false);
+  const [ text, setText ] = useState('');
 
   useEffect(() => {
     async function doFetch() {
@@ -20,7 +21,18 @@ const Home: React.FC = () => {
       setTodos(data);
     }
     doFetch();
-  }, [])
+  }, []);
+
+  const addTodo = () => {
+    const nextId = todos.reduce((id, todo) => Math.max(id, todo.id!), 0) + 1;
+    const todo: Todo = {
+      id: nextId,
+      text
+    };
+    setTodos([...todos, todo]);
+    setShowModal(false);
+    setText('');
+  };
 
   return (
     <IonPage>
@@ -51,7 +63,18 @@ const Home: React.FC = () => {
           <IonModal 
             onDidDismiss={ () => setShowModal(false)}
             isOpen={showModal}>
-
+              <IonToolbar>
+                <IonTitle>Add Todo</IonTitle>
+              </IonToolbar>
+              <IonContent>
+                <IonList>
+                  <IonItem>
+                    <IonLabel position='stacked'></IonLabel>
+                    <IonInput id='todo' title='Todo Text' value={text} onIonChange={ e => setText(e.detail.value!)} />
+                  </IonItem>
+                </IonList>
+                <IonButton expand='block' onClick={addTodo}>Save</IonButton>
+              </IonContent>
           </IonModal>
           </IonFab>
       </IonContent>
