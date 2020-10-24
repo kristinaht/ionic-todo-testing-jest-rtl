@@ -48,3 +48,21 @@ test('should add a new todo when clicking the new button', async () => {
   fireEvent.click(button);
   await findByText('test todo');
 });
+
+test('todo should be removed when clicking on a delete icon', async () => {
+  const todos: Todo[] = [
+    {id: 1, text: 'review PR'},
+    {id: 2, text: 'update docs'},
+  ];
+
+  mockFetch(todos);
+
+  const { queryByText, findByText, findAllByTestId } = render(<Home />);
+
+  await findByText(todos[0].text);
+  const deleteIcon = await findAllByTestId('trash');
+  fireEvent.click(deleteIcon[0]);
+
+  const reviewPRRow = queryByText(todos[0].text);
+  expect(reviewPRRow).not.toBeInTheDocument();
+})
