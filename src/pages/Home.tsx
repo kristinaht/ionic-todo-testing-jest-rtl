@@ -34,6 +34,11 @@ const Home: React.FC = () => {
     setText('');
   };
 
+  const deleteTodo = (todo: Todo) => {
+    const newTodos = todos.filter(t => t.id !== todo.id);
+    setTodos(newTodos);
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -51,7 +56,9 @@ const Home: React.FC = () => {
                   <IonLabel>
                     <h2>{todo.text}</h2>
                   </IonLabel>
-                  <IonIcon data-icon='trash' icon={trash} color='danger' slot='end'/>
+                  <IonIcon data-testid='trash'
+                    onClick={() => deleteTodo(todo)}
+                    data-icon='trash' icon={trash} color='danger' slot='end'/>
                 </IonItem>
               ))}
             </IonList>
